@@ -67,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
                 .roles(List.of(admin, staff, customer))
                 .status(AccountUserStatus.ACTIVE)
                 .attempt(0)
+                .isUnlocked(true)
                 .createdAt(LocalDateTime.now())
                 .build();
         userRepo.save(user);
