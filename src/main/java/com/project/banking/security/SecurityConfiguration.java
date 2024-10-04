@@ -29,8 +29,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/docs").permitAll()
-                        .requestMatchers(APIUrl.AUTHENTICATION_API + "/**").permitAll()
-                        .requestMatchers(APIUrl.TRANSACTION_API + "/**").permitAll()
+                        .requestMatchers("/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/**").permitAll()
+//                        .requestMatchers(APIUrl.AUTHENTICATION_API + "/**").permitAll()
+//                        .requestMatchers(APIUrl.TRANSACTION_API + "/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

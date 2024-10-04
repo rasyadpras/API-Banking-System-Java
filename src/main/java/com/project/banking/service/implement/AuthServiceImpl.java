@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
                 .roles(List.of(admin, staff, customer))
                 .status(AccountUserStatus.ACTIVE)
                 .attempt(0)
+                .isUnlocked(true)
                 .createdAt(LocalDateTime.now())
                 .build();
         userRepo.save(user);
@@ -90,20 +92,58 @@ public class AuthServiceImpl implements AuthService {
         return registerMapper.toRegisterResponse(user);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public LoginResponse login(LoginRequest request) throws DataIntegrityViolationException {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
-                request.getPassword()
-        );
+        User user = userService.findByEmail(request.getEmail());
 
-        Authentication authenticated = authenticationManager.authenticate(authentication);
-        User authenticatedUser = (User) authenticated.getPrincipal();
-        String token = jwtService.generateToken(authenticatedUser);
+        if (user.getAttempt() >= 5) {
+            user.setUnlocked(false);
+            userRepo.save(user);
+            throw new ResponseStatusException(HttpStatus.LOCKED, "Account is locked due to too many failed login attempts");
+        }
 
-        return loginMapper.toLoginResponse(authenticatedUser, token);
+        try {
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            );
+
+            Authentication authenticated = authenticationManager.authenticate(authentication);
+            User authenticatedUser = (User) authenticated.getPrincipal();
+            String token = jwtService.generateToken(authenticatedUser);
+
+            user.setAttempt(0);
+            userRepo.saveAndFlush(user);
+            return loginMapper.toLoginResponse(authenticatedUser, token);
+        } catch (BadCredentialsException e) {
+            user.setAttempt(user.getAttempt() + 1);
+            userRepo.save(user);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
+
+//    @Override
+//    public LoginResponse login(LoginRequest request) {
+//        validation.validate(request);
+//        Optional<User> userOptional = userRepo.findByEmail(request.getEmail());
+//        if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
+//            throw new BadCredentialsException("Invalid email or password");
+//        }
+//        User account = userOptional.get();
+//        String token = jwtService.generateToken(account);
+//        return loginMapper.toLoginResponse(account, token);
+//    }
+
+//    @Override
+//    public LoginResponse login(LoginRequest request) {
+//        validation.validate(request);
+//        User currentUser = userService.getByContext();
+//        if (!passwordEncoder.matches(request.getPassword(), currentUser.getPassword())) {
+//            throw new BadCredentialsException("Invalid email or password");
+//        }
+//        String token = jwtService.generateToken(currentUser);
+//        return loginMapper.toLoginResponse(currentUser, token);
+//    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -131,9 +171,7 @@ public class AuthServiceImpl implements AuthService {
         System.out.println("User email received: " + request.getUserId());
 
         User currentUser = userService.getByContext();
-        System.out.println("Current User email: " + currentUser.getId());
         User user = userService.findId(request.getUserId());
-        System.out.println("Found User email: " + user.getId());
 
         if (!currentUser.getEmail().equals(user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access deny");

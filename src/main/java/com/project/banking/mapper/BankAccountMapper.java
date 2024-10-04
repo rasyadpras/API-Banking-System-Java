@@ -1,30 +1,36 @@
 package com.project.banking.mapper;
 
 import com.project.banking.dto.response.bankacc.BankAccountResponse;
+import com.project.banking.dto.response.bankacc.BranchResponseToBankAccount;
 import com.project.banking.dto.response.bankacc.ProfileResponseToBankAccount;
 import com.project.banking.dto.response.bankacc.UserResponseToBankAccount;
 import com.project.banking.entity.BankAccount;
+import com.project.banking.entity.Branch;
 import com.project.banking.entity.Profile;
 import com.project.banking.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BankAccountMapper {
-    private final BranchMapper branchMapper;
-
-    private BankAccountMapper(BranchMapper branchMapper) {
-        this.branchMapper = branchMapper;
-    }
-
     public BankAccountResponse toBankAccountResponse(BankAccount bankAccount) {
         return BankAccountResponse.builder()
                 .id(bankAccount.getId())
-                .branch(branchMapper.toBranchResponse(bankAccount.getBranch()))
+                .branch(toBranchResponse(bankAccount.getBranch()))
                 .profile(toProfileResponse(bankAccount.getProfile()))
                 .accountNumber(bankAccount.getAccountNumber())
                 .status(bankAccount.getStatus())
                 .createdAt(bankAccount.getCreatedAt())
                 .updatedAt(bankAccount.getUpdatedAt())
+                .build();
+    }
+
+    private BranchResponseToBankAccount toBranchResponse(Branch branch) {
+        return BranchResponseToBankAccount.builder()
+                .branchId(branch.getId())
+                .code(branch.getBranchCode())
+                .branchName(branch.getBranchName())
+                .region(branch.getRegion())
+                .city(branch.getCity())
                 .build();
     }
 

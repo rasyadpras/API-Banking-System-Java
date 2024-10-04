@@ -1,11 +1,9 @@
 package com.project.banking.dto.response.bankacc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.banking.entity.Role;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

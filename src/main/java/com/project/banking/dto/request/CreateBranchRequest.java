@@ -16,4 +16,10 @@ public class CreateBranchRequest {
 
     @NotBlank(message = "Branch name must be not blank")
     private String branchName;
+
+    @NotBlank(message = "Region must be not blank")
+    private String region;
+
+    @NotBlank(message = "City must be not blank")
+    private String city;
 }

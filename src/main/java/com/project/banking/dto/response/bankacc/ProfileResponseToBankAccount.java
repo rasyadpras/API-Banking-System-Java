@@ -1,7 +1,6 @@
 package com.project.banking.dto.response.bankacc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.banking.dto.response.profile.UserResponseToProfile;
 import com.project.banking.utils.constant.Gender;
 import com.project.banking.utils.constant.IdentityType;
 import lombok.*;

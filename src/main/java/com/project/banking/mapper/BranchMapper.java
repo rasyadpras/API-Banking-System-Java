@@ -11,6 +11,8 @@ public class BranchMapper {
                 .branchId(branch.getId())
                 .code(branch.getBranchCode())
                 .branchName(branch.getBranchName())
+                .region(branch.getRegion())
+                .city(branch.getCity())
                 .build();
     }
 }

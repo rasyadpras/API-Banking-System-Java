@@ -1,7 +1,6 @@
 package com.project.banking.dto.response.bankacc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.banking.dto.response.branch.BranchResponse;
 import com.project.banking.utils.constant.BankAccountStatus;
 import lombok.*;
 
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class BankAccountResponse {
     private String id;
-    private BranchResponse branch;
+    private BranchResponseToBankAccount branch;
     private ProfileResponseToBankAccount profile;
     private String accountNumber;
     private BankAccountStatus status;

@@ -1,16 +1,13 @@
-package com.project.banking.dto.response.branch;
+package com.project.banking.dto.response.bankacc;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BranchResponse {
+public class BranchResponseToBankAccount {
     private String branchId;
     private String code;
     private String branchName;

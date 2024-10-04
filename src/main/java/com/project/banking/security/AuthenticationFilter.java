@@ -40,7 +40,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 JwtClaims decodeJwt = jwtService.claimToken(bearerToken);
                 User accountBySub = userService.findId(decodeJwt.getUserId());
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                        accountBySub.getEmail(),
+                        accountBySub.getUsername(),
                         null,
                         accountBySub.getAuthorities()
                 );

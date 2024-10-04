@@ -1,9 +1,11 @@
 package com.project.banking.mapper;
 
 import com.project.banking.dto.response.profile.BankAccountResponseToProfile;
+import com.project.banking.dto.response.profile.BranchResponseToProfile;
 import com.project.banking.dto.response.profile.ProfileResponse;
 import com.project.banking.dto.response.profile.UserResponseToProfile;
 import com.project.banking.entity.BankAccount;
+import com.project.banking.entity.Branch;
 import com.project.banking.entity.Profile;
 import com.project.banking.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,12 +15,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProfileMapper {
-    private final BranchMapper branchMapper;
-
-    private ProfileMapper(BranchMapper branchMapper) {
-        this.branchMapper = branchMapper;
-    }
-
     public ProfileResponse toProfileResponse(Profile profile) {
         return ProfileResponse.builder()
                 .id(profile.getId())
@@ -55,12 +51,21 @@ public class ProfileMapper {
     private BankAccountResponseToProfile toBankAccountResponse(BankAccount bankAccount) {
         return BankAccountResponseToProfile.builder()
                 .accountId(bankAccount.getId())
-                .branch(branchMapper.toBranchResponse(bankAccount.getBranch()))
+                .branch(toBranchResponse(bankAccount.getBranch()))
                 .accountNumber(bankAccount.getAccountNumber())
                 .balance(bankAccount.getBalance())
                 .status(bankAccount.getStatus())
                 .createdAt(bankAccount.getCreatedAt())
                 .updatedAt(bankAccount.getUpdatedAt())
+                .build();
+    }
+
+    private BranchResponseToProfile toBranchResponse(Branch branch) {
+        return BranchResponseToProfile.builder()
+                .branchId(branch.getId())
+                .code(branch.getBranchCode())
+                .branchName(branch.getBranchName())
+                .region(branch.getRegion())
                 .build();
     }
 }

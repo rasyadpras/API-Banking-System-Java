@@ -1,7 +1,6 @@
 package com.project.banking.dto.response.profile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.banking.entity.Role;
 import com.project.banking.utils.constant.AccountUserStatus;
 import lombok.*;
 

@@ -28,7 +28,7 @@ public class JwtServiceImpl implements JwtService {
     public JwtServiceImpl(
             @Value("${banking.jwt.secret_key}") String JWT_SECRET,
             @Value("${banking.jwt.issuer}") String ISSUER,
-            @Value("${banking.jwt.exp}") int JWT_EXPIRATION
+            @Value("${banking.jwt.exp}") long JWT_EXPIRATION
     ) {
         this.JWT_SECRET = JWT_SECRET;
         this.ISSUER = ISSUER;

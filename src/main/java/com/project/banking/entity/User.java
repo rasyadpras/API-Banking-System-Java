@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @Column(name = "login_attempt", nullable = false)
     private int attempt;
 
-    @Column(name = "is_unlocked", nullable = false, columnDefinition = "DEFAULT TRUE")
+    @Column(name = "is_unlocked", nullable = false, columnDefinition = "boolean DEFAULT TRUE")
     private boolean isUnlocked;
 
     @Column(name = "created_at", nullable = false)
