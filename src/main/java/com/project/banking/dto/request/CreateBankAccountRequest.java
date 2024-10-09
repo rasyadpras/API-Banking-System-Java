@@ -9,9 +9,12 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CreateBankAccountRequest {
-    @NotBlank(message = "Branch Id required")
+    @NotBlank(message = "Branch id required")
     private String branchId;
 
-    @NotBlank(message = "Profile Id required")
+    @NotBlank(message = "Profile id required")
     private String profileId;
+
+    @NotBlank(message = "Bank account type must be not blank")
+    private String type;
 }

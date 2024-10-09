@@ -1,6 +1,7 @@
 package com.project.banking.service.implement;
 
 import com.project.banking.dto.request.CreateBranchRequest;
+import com.project.banking.dto.request.UpdateBranchRequest;
 import com.project.banking.dto.response.branch.BranchResponse;
 import com.project.banking.entity.Branch;
 import com.project.banking.mapper.BranchMapper;
@@ -30,6 +31,8 @@ public class BranchServiceImpl implements BranchService {
         Branch branch = Branch.builder()
                 .branchCode(request.getBranchCode())
                 .branchName(request.getBranchName())
+                .region(request.getRegion())
+                .address(request.getAddress())
                 .createdAt(LocalDateTime.now())
                 .build();
         branchRepo.saveAndFlush(branch);
@@ -41,6 +44,18 @@ public class BranchServiceImpl implements BranchService {
     public List<BranchResponse> getAll() {
         List<Branch> branchList = branchRepo.findAll();
         return branchList.stream().map(mapper::toBranchResponse).toList();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public BranchResponse update(UpdateBranchRequest request) {
+        validation.validate(request);
+        Branch branch = findId(request.getBranchId());
+        branch.setBranchName(request.getBranchName());
+        branch.setAddress(request.getAddress());
+        branch.setUpdatedAt(LocalDateTime.now());
+        branchRepo.save(branch);
+        return mapper.toBranchResponse(branch);
     }
 
     @Transactional(readOnly = true)

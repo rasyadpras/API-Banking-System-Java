@@ -21,5 +21,5 @@ public class CreateBranchRequest {
     private String region;
 
     @NotBlank(message = "City must be not blank")
-    private String city;
+    private String address;
 }

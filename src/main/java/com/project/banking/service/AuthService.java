@@ -10,6 +10,6 @@ public interface AuthService {
     LoginResponse login(LoginRequest request);
     UserResponse addRole(UpdateUserAddRoleRequest request);
     void updatePassword(UpdateUserPasswordRequest request);
-    void verify(UpdateUserStatusRequest request);
-    void unlock(UpdateUserStatusRequest request);
+    void verify(String id);
+    void unlock(String id);
 }

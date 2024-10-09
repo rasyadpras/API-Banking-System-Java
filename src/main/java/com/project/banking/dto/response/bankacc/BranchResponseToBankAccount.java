@@ -12,5 +12,5 @@ public class BranchResponseToBankAccount {
     private String code;
     private String branchName;
     private String region;
-    private String city;
+    private String address;
 }

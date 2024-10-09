@@ -1,65 +1,61 @@
 package com.project.banking.controller;
 
-import com.project.banking.dto.request.*;
-import com.project.banking.dto.response.bankacc.BankAccountResponse;
+import com.project.banking.dto.request.AddCardRequest;
+import com.project.banking.dto.response.card.CardResponse;
 import com.project.banking.dto.response.format.SuccessResponse;
-import com.project.banking.service.BankAccountService;
+import com.project.banking.service.CardService;
 import com.project.banking.utils.constant.APIUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = APIUrl.BANK_ACCOUNT_API)
-public class BankAccountController {
-    private final BankAccountService bankAccountService;
+@RequestMapping(path = APIUrl.CARD_API)
+public class CardController {
+    private final CardService cardService;
 
-    @PreAuthorize("hasAnyRole('OFFICER')")
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<BankAccountResponse>> createBankAccount(@RequestBody CreateBankAccountRequest request) {
-        BankAccountResponse account = bankAccountService.create(request);
-        SuccessResponse<BankAccountResponse> response = SuccessResponse.<BankAccountResponse>builder()
+    public ResponseEntity<SuccessResponse<CardResponse>> addCard(@RequestBody AddCardRequest request) {
+        CardResponse card = cardService.create(request);
+        SuccessResponse<CardResponse> response = SuccessResponse.<CardResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
-                .data(account)
+                .data(card)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @GetMapping(
             path = APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<BankAccountResponse>> getBankAccountById(@PathVariable String id) {
-        BankAccountResponse account = bankAccountService.getById(id);
-        SuccessResponse<BankAccountResponse> response = SuccessResponse.<BankAccountResponse>builder()
+    public ResponseEntity<SuccessResponse<CardResponse>> getCardById(@PathVariable String id) {
+        CardResponse card = cardService.getById(id);
+        SuccessResponse<CardResponse> response = SuccessResponse.<CardResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(account)
+                .data(card)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @PatchMapping(
-            path = APIUrl.PATH_CLOSE + APIUrl.PATH_ID,
+            path = APIUrl.PATH_UNBLOCK + APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<String>> closeAccount(@PathVariable String id) {
-        bankAccountService.delete(id);
+    public ResponseEntity<SuccessResponse<String>> unblockCard(@PathVariable String id) {
+        cardService.unblock(id);
         SuccessResponse<String> response = SuccessResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data("Account closed")
+                .data("Your card is active now")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

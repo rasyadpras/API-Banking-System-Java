@@ -107,8 +107,9 @@ public class AuthServiceImpl implements AuthService {
                     request.getEmail(),
                     request.getPassword()
             );
-
+            System.out.println("authentication ============================== " + authentication);
             Authentication authenticated = authenticationManager.authenticate(authentication);
+            System.out.println("authenticated ============================== " + authenticated);
             User authenticatedUser = (User) authenticated.getPrincipal();
             String token = jwtService.generateToken(authenticatedUser);
 
@@ -184,11 +185,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void verify(UpdateUserStatusRequest request) {
-        validation.validate(request);
-        User user = userService.findId(request.getUserId());
+    public void verify(String id) {
+        User user = userService.findId(id);
         if (user.getStatus().equals(AccountUserStatus.ACTIVE)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your account is already active");
+        }
+        if (user.getStatus().equals(AccountUserStatus.LOCKED)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your account has been locked");
         }
         user.setStatus(AccountUserStatus.ACTIVE);
         user.setUpdatedAt(LocalDateTime.now());
@@ -198,9 +201,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void unlock(UpdateUserStatusRequest request) {
-        validation.validate(request);
-        User user = userService.findId(request.getUserId());
+    public void unlock(String id) {
+        User user = userService.findId(id);
         if (user.isUnlocked()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your account is already active");
         }

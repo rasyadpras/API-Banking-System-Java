@@ -12,7 +12,9 @@ public class BranchMapper {
                 .code(branch.getBranchCode())
                 .branchName(branch.getBranchName())
                 .region(branch.getRegion())
-                .city(branch.getCity())
+                .address(branch.getAddress())
+                .createdAt(branch.getCreatedAt())
+                .updatedAt(branch.getUpdatedAt())
                 .build();
     }
 }

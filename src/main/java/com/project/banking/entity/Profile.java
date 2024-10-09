@@ -40,7 +40,7 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     private IdentityType identityType;
 
-    @Column(name = "identity_number", nullable = false)
+    @Column(name = "identity_number", nullable = false, unique = true)
     private String identityNumber;
 
     @Column(name = "address", nullable = false)

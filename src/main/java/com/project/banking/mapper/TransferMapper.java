@@ -27,6 +27,7 @@ public class TransferMapper {
                 .accountId(bankAccount.getId())
                 .profile(toProfileResponse(bankAccount.getProfile()))
                 .accountNumber(bankAccount.getAccountNumber())
+                .bankAccountType(bankAccount.getType())
                 .build();
     }
 

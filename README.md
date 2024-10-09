@@ -23,7 +23,6 @@ To view the full API documentation, navigate to the following endpoint after sta
 application: http://localhost:8080/docs
 
 
-
 ### Instalation Guide
 
 1. Ensure you have installed at least Java Development Kit (JDK) version 17 and Maven on your computer.

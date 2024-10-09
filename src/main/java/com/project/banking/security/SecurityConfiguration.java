@@ -29,7 +29,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/docs").permitAll()
-                        .requestMatchers("/swagger-ui/index.html").permitAll()
                         .requestMatchers("/**").permitAll()
 //                        .requestMatchers(APIUrl.AUTHENTICATION_API + "/**").permitAll()
 //                        .requestMatchers(APIUrl.TRANSACTION_API + "/**").permitAll()

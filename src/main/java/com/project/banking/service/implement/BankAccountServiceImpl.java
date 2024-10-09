@@ -1,7 +1,6 @@
 package com.project.banking.service.implement;
 
 import com.project.banking.dto.request.CreateBankAccountRequest;
-import com.project.banking.dto.request.UpdateBankAccountStatusRequest;
 import com.project.banking.dto.response.bankacc.BankAccountResponse;
 import com.project.banking.entity.BankAccount;
 import com.project.banking.mapper.BankAccountMapper;
@@ -11,6 +10,7 @@ import com.project.banking.service.BranchService;
 import com.project.banking.service.ProfileService;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.BankAccountStatus;
+import com.project.banking.utils.constant.BankAccountType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,19 @@ public class BankAccountServiceImpl implements BankAccountService {
         return branchCode + hashedMonthYear + sequenceNumberString;
     }
 
+    private BankAccountType inputType(String type) {
+        return switch (type.toLowerCase()) {
+            case "regular" -> BankAccountType.REGULAR_SAVINGS;
+            case "business" -> BankAccountType.BUSINESS_SAVINGS;
+            case "student" -> BankAccountType.STUDENT_SAVINGS;
+            case "plan" -> BankAccountType.SAVINGS_PLAN;
+            case "other" -> BankAccountType.OTHER_SAVINGS;
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bank account type must be 'regular', 'business', 'student', 'plan', or 'other'"
+            );
+        };
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public BankAccountResponse create(CreateBankAccountRequest request) {
@@ -58,6 +71,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .branch(branchService.findId(request.getBranchId()))
                 .profile(profileService.findId(request.getProfileId()))
                 .accountNumber(accNumber)
+                .type(inputType(request.getType()))
                 .balance(0L)
                 .status(BankAccountStatus.ACTIVE)
                 .createdAt(LocalDateTime.now())
@@ -76,9 +90,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(UpdateBankAccountStatusRequest request) {
-        validation.validate(request);
-        BankAccount account = findId(request.getBankAccountId());
+    public void delete(String id) {
+        BankAccount account = findId(id);
+        if (account.getStatus().equals(BankAccountStatus.CLOSED)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bank account already closed");
+        }
         account.setStatus(BankAccountStatus.CLOSED);
         account.setUpdatedAt(LocalDateTime.now());
         bankAccountRepo.save(account);

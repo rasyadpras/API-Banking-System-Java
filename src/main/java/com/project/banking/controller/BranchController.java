@@ -1,6 +1,7 @@
 package com.project.banking.controller;
 
 import com.project.banking.dto.request.CreateBranchRequest;
+import com.project.banking.dto.request.UpdateBranchRequest;
 import com.project.banking.dto.response.branch.BranchResponse;
 import com.project.banking.dto.response.format.SuccessResponse;
 import com.project.banking.service.BranchService;
@@ -43,6 +44,21 @@ public class BranchController {
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(list)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+    @PatchMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<SuccessResponse<BranchResponse>> updateBranch(@RequestBody UpdateBranchRequest request) {
+        BranchResponse branch = branchService.update(request);
+        SuccessResponse<BranchResponse> response = SuccessResponse.<BranchResponse>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(branch)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

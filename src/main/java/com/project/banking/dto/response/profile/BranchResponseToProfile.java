@@ -12,4 +12,5 @@ public class BranchResponseToProfile {
     private String code;
     private String branchName;
     private String region;
+    private String address;
 }

@@ -1,13 +1,7 @@
 package com.project.banking.mapper;
 
-import com.project.banking.dto.response.profile.BankAccountResponseToProfile;
-import com.project.banking.dto.response.profile.BranchResponseToProfile;
-import com.project.banking.dto.response.profile.ProfileResponse;
-import com.project.banking.dto.response.profile.UserResponseToProfile;
-import com.project.banking.entity.BankAccount;
-import com.project.banking.entity.Branch;
-import com.project.banking.entity.Profile;
-import com.project.banking.entity.User;
+import com.project.banking.dto.response.profile.*;
+import com.project.banking.entity.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -53,8 +47,11 @@ public class ProfileMapper {
                 .accountId(bankAccount.getId())
                 .branch(toBranchResponse(bankAccount.getBranch()))
                 .accountNumber(bankAccount.getAccountNumber())
-                .balance(bankAccount.getBalance())
+                .bankAccountType(bankAccount.getType())
                 .status(bankAccount.getStatus())
+                .cards(bankAccount.getCards().stream()
+                        .map(this::toCardResponse)
+                        .collect(Collectors.toList()))
                 .createdAt(bankAccount.getCreatedAt())
                 .updatedAt(bankAccount.getUpdatedAt())
                 .build();
@@ -66,6 +63,17 @@ public class ProfileMapper {
                 .code(branch.getBranchCode())
                 .branchName(branch.getBranchName())
                 .region(branch.getRegion())
+                .address(branch.getAddress())
+                .build();
+    }
+
+    private CardResponseToProfile toCardResponse(Card card) {
+        return CardResponseToProfile.builder()
+                .id(card.getId())
+                .cardType(card.getCardType())
+                .cardNumber(card.getCardNumber())
+                .principal(card.getPrincipal())
+                .status(card.getStatus())
                 .build();
     }
 }

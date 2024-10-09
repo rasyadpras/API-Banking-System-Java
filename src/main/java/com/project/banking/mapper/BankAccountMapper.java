@@ -1,13 +1,7 @@
 package com.project.banking.mapper;
 
-import com.project.banking.dto.response.bankacc.BankAccountResponse;
-import com.project.banking.dto.response.bankacc.BranchResponseToBankAccount;
-import com.project.banking.dto.response.bankacc.ProfileResponseToBankAccount;
-import com.project.banking.dto.response.bankacc.UserResponseToBankAccount;
-import com.project.banking.entity.BankAccount;
-import com.project.banking.entity.Branch;
-import com.project.banking.entity.Profile;
-import com.project.banking.entity.User;
+import com.project.banking.dto.response.bankacc.*;
+import com.project.banking.entity.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,9 +12,24 @@ public class BankAccountMapper {
                 .branch(toBranchResponse(bankAccount.getBranch()))
                 .profile(toProfileResponse(bankAccount.getProfile()))
                 .accountNumber(bankAccount.getAccountNumber())
+                .bankAccountType(bankAccount.getType())
                 .status(bankAccount.getStatus())
+                .cards(bankAccount.getCards().stream()
+                        .map(this::toCardResponse)
+                        .toList())
                 .createdAt(bankAccount.getCreatedAt())
                 .updatedAt(bankAccount.getUpdatedAt())
+                .build();
+    }
+
+    private CardResponseToBankAccount toCardResponse(Card card) {
+        return CardResponseToBankAccount.builder()
+                .id(card.getId())
+                .cardType(card.getCardType())
+                .cardNumber(card.getCardNumber())
+                .principal(card.getPrincipal())
+                .validThru(card.getExpiredDate())
+                .status(card.getStatus())
                 .build();
     }
 
@@ -30,7 +39,7 @@ public class BankAccountMapper {
                 .code(branch.getBranchCode())
                 .branchName(branch.getBranchName())
                 .region(branch.getRegion())
-                .city(branch.getCity())
+                .address(branch.getAddress())
                 .build();
     }
 
