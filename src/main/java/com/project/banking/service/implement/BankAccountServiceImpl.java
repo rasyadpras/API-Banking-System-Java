@@ -113,4 +113,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public List<BankAccount> findProfile(String id) {
         return bankAccountRepo.findByProfileId(id);
     }
+
+    @Override
+    public BankAccount findByAccountNumber(String accountNumber) {
+        return bankAccountRepo.findByAccountNumber(accountNumber).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank account number not found")
+        );
+    }
 }

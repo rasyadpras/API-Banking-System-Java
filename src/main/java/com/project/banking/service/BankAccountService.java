@@ -13,4 +13,5 @@ public interface BankAccountService {
 
     BankAccount findId(String id);
     List<BankAccount> findProfile(String id);
+    BankAccount findByAccountNumber(String accountNumber);
 }

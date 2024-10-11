@@ -1,6 +1,6 @@
 package com.project.banking.controller;
 
-import com.project.banking.dto.request.UpdateCashTransactionRequest;
+import com.project.banking.dto.request.CreateCashTransactionRequest;
 import com.project.banking.dto.response.cashtrx.CashTransactionResponse;
 import com.project.banking.dto.response.format.SuccessResponse;
 import com.project.banking.service.CashTransactionService;
@@ -26,7 +26,7 @@ public class CashTransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<CashTransactionResponse>> createCashDeposit(@RequestBody UpdateCashTransactionRequest request) {
+    public ResponseEntity<SuccessResponse<CashTransactionResponse>> createCashDeposit(@RequestBody CreateCashTransactionRequest request) {
         CashTransactionResponse deposit = cashTransactionService.cashDeposit(request);
         SuccessResponse<CashTransactionResponse> response = SuccessResponse.<CashTransactionResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
@@ -42,7 +42,7 @@ public class CashTransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<CashTransactionResponse>> createCashWithdraw(@RequestBody UpdateCashTransactionRequest request) {
+    public ResponseEntity<SuccessResponse<CashTransactionResponse>> createCashWithdraw(@RequestBody CreateCashTransactionRequest request) {
         CashTransactionResponse withdraw = cashTransactionService.cashWithdrawal(request);
         SuccessResponse<CashTransactionResponse> response = SuccessResponse.<CashTransactionResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())

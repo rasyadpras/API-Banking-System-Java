@@ -39,8 +39,8 @@ public class TransferServiceImpl implements TransferService {
 
         User userByContext = userService.getByContext();
         Profile currentUser = userByContext.getProfile();
-        BankAccount sourceAcc = bankAccountService.findId(request.getSourceAccountId());
-        BankAccount destinationAcc = bankAccountService.findId(request.getDestinationAccountId());
+        BankAccount sourceAcc = bankAccountService.findByAccountNumber(request.getSourceAccountNumber());
+        BankAccount destinationAcc = bankAccountService.findByAccountNumber(request.getDestinationAccountNumber());
 
         if (!currentUser.getId().equals(sourceAcc.getProfile().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this transaction");

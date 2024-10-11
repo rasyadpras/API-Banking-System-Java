@@ -1,6 +1,6 @@
 package com.project.banking.service.implement;
 
-import com.project.banking.dto.request.UpdateCashTransactionRequest;
+import com.project.banking.dto.request.CreateCashTransactionRequest;
 import com.project.banking.dto.response.cashtrx.CashTransactionResponse;
 import com.project.banking.entity.BankAccount;
 import com.project.banking.entity.CashTransaction;
@@ -35,7 +35,7 @@ public class CashTransactionServiceImpl implements CashTransactionService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public CashTransactionResponse cashDeposit(UpdateCashTransactionRequest request) {
+    public CashTransactionResponse cashDeposit(CreateCashTransactionRequest request) {
         validation.validate(request);
         BankAccount account = bankAccountService.findId(request.getBankAccountId());
 
@@ -58,7 +58,7 @@ public class CashTransactionServiceImpl implements CashTransactionService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public CashTransactionResponse cashWithdrawal(UpdateCashTransactionRequest request) {
+    public CashTransactionResponse cashWithdrawal(CreateCashTransactionRequest request) {
         validation.validate(request);
         BankAccount account = bankAccountService.findId(request.getBankAccountId());
 
