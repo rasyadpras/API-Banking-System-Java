@@ -11,6 +11,7 @@ import com.project.banking.repository.CashTransactionRepository;
 import com.project.banking.service.BankAccountService;
 import com.project.banking.service.CashTransactionService;
 import com.project.banking.service.UserService;
+import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.BankAccountStatus;
 import com.project.banking.utils.constant.TransactionCashType;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,24 +34,26 @@ public class CashTransactionServiceImpl implements CashTransactionService {
 
     private final UserService userService;
     private final BankAccountService bankAccountService;
+    private final ConverterUtil converter;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public CashTransactionResponse cashDeposit(CreateCashTransactionRequest request) {
         validation.validate(request);
-        BankAccount account = bankAccountService.findId(request.getBankAccountId());
+        BankAccount account = bankAccountService.findByAccountNumber(request.getAccountNumber());
+        BigDecimal convertedAmount = converter.convertToBigDecimal(request.getAmount());
 
         if (account.getStatus().equals(BankAccountStatus.CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This account is closed");
         }
 
-        account.setBalance(account.getBalance() + request.getAmount());
+        account.setBalance(account.getBalance().add(convertedAmount));
         account.setUpdatedAt(LocalDateTime.now());
 
         CashTransaction transaction = CashTransaction.builder()
                 .bankAccount(account)
                 .transactionType(TransactionCashType.DEPOSIT)
-                .amount(request.getAmount())
+                .amount(convertedAmount)
                 .transactionDate(LocalDateTime.now())
                 .build();
         cashTransactionRepo.saveAndFlush(transaction);
@@ -60,23 +64,24 @@ public class CashTransactionServiceImpl implements CashTransactionService {
     @Override
     public CashTransactionResponse cashWithdrawal(CreateCashTransactionRequest request) {
         validation.validate(request);
-        BankAccount account = bankAccountService.findId(request.getBankAccountId());
+        BankAccount account = bankAccountService.findByAccountNumber(request.getAccountNumber());
+        BigDecimal convertedAmount = converter.convertToBigDecimal(request.getAmount());
 
         if (account.getStatus().equals(BankAccountStatus.CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This account is closed");
         }
 
-        if (account.getBalance() < request.getAmount()) {
+        if (account.getBalance().compareTo(convertedAmount) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance");
         }
 
-        account.setBalance(account.getBalance() - request.getAmount());
+        account.setBalance(account.getBalance().subtract(convertedAmount));
         account.setUpdatedAt(LocalDateTime.now());
 
         CashTransaction transaction = CashTransaction.builder()
                 .bankAccount(account)
                 .transactionType(TransactionCashType.WITHDRAWAL)
-                .amount(request.getAmount())
+                .amount(convertedAmount)
                 .transactionDate(LocalDateTime.now())
                 .build();
         cashTransactionRepo.saveAndFlush(transaction);

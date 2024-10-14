@@ -5,6 +5,7 @@ import com.project.banking.utils.constant.BankAccountStatus;
 import com.project.banking.utils.constant.BankAccountType;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BankAccountResponse {
     private ProfileResponseToBankAccount profile;
     private String accountNumber;
     private BankAccountType bankAccountType;
-    private Long balance;
+    private BigDecimal balance;
     private BankAccountStatus status;
     private List<CardResponseToBankAccount> cards;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

@@ -8,6 +8,7 @@ import com.project.banking.repository.BankAccountRepository;
 import com.project.banking.service.BankAccountService;
 import com.project.banking.service.BranchService;
 import com.project.banking.service.ProfileService;
+import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.BankAccountStatus;
 import com.project.banking.utils.constant.BankAccountType;
@@ -32,6 +33,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     private final BranchService branchService;
     private final ProfileService profileService;
+    private final ConverterUtil converter;
 
     private final AtomicInteger sequence = new AtomicInteger(1);
 
@@ -72,7 +74,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .profile(profileService.findId(request.getProfileId()))
                 .accountNumber(accNumber)
                 .type(inputType(request.getType()))
-                .balance(0L)
+                .balance(converter.convertToBigDecimal(0L))
                 .status(BankAccountStatus.ACTIVE)
                 .createdAt(LocalDateTime.now())
                 .build();

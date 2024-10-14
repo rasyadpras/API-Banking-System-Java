@@ -11,6 +11,7 @@ import com.project.banking.repository.TransferRepository;
 import com.project.banking.service.BankAccountService;
 import com.project.banking.service.TransferService;
 import com.project.banking.service.UserService;
+import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.BankAccountStatus;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class TransferServiceImpl implements TransferService {
 
     private final BankAccountService bankAccountService;
     private final UserService userService;
+    private final ConverterUtil converter;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -41,6 +44,7 @@ public class TransferServiceImpl implements TransferService {
         Profile currentUser = userByContext.getProfile();
         BankAccount sourceAcc = bankAccountService.findByAccountNumber(request.getSourceAccountNumber());
         BankAccount destinationAcc = bankAccountService.findByAccountNumber(request.getDestinationAccountNumber());
+        BigDecimal convertedAmount = converter.convertToBigDecimal(request.getAmount());
 
         if (!currentUser.getId().equals(sourceAcc.getProfile().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this transaction");
@@ -50,19 +54,19 @@ public class TransferServiceImpl implements TransferService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Destination account is closed");
         }
 
-        if (sourceAcc.getBalance() < request.getAmount()) {
+        if (sourceAcc.getBalance().compareTo(convertedAmount) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance");
         }
 
-        sourceAcc.setBalance(sourceAcc.getBalance() - request.getAmount());
+        sourceAcc.setBalance(sourceAcc.getBalance().subtract(convertedAmount));
         sourceAcc.setUpdatedAt(LocalDateTime.now());
-        destinationAcc.setBalance(destinationAcc.getBalance() + request.getAmount());
+        destinationAcc.setBalance(destinationAcc.getBalance().add(convertedAmount));
         destinationAcc.setUpdatedAt(LocalDateTime.now());
 
         Transfer transfer = Transfer.builder()
                 .sourceAccount(sourceAcc)
                 .destinationAccount(destinationAcc)
-                .amount(request.getAmount())
+                .amount(convertedAmount)
                 .build();
         transferRepo.saveAndFlush(transfer);
         return mapper.toTransferResponse(transfer);

@@ -5,6 +5,7 @@ import com.project.banking.utils.constant.BankAccountType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class BankAccount {
     @Enumerated(EnumType.STRING)
     private BankAccountType type;
 
-    @Column(name = "balance", nullable = false)
-    private Long balance;
+    @Column(name = "balance", nullable = false, precision = 12, scale = 2)
+    private BigDecimal balance;
 
     @Column(name = "status_bank_account", nullable = false)
     @Enumerated(EnumType.STRING)
