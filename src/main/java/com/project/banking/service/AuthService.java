@@ -9,7 +9,8 @@ public interface AuthService {
     RegisterResponse register(RegisterRequest request);
     LoginResponse login(LoginRequest request);
     UserResponse addRole(UpdateUserAddRoleRequest request);
-    void updatePassword(UpdateUserPasswordRequest request);
+    void forgotPassword(ForgotUserPasswordRequest request);
+    void resetPassword(ResetUserPasswordRequest request);
     void verify(String id);
     void unlock(String id);
 }

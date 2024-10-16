@@ -167,10 +167,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updatePassword(UpdateUserPasswordRequest request) {
+    public void forgotPassword(ForgotUserPasswordRequest request) {
         validation.validate(request);
-        System.out.println("User email received: " + request.getUserId());
-
         User currentUser = userService.getByContext();
         User user = userService.findId(request.getUserId());
 
@@ -179,6 +177,26 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepo.save(user);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void resetPassword(ResetUserPasswordRequest request) {
+        validation.validate(request);
+        User currentUser = userService.getByContext();
+        User user = userService.findId(request.getUserId());
+
+        if (!currentUser.getEmail().equals(user.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access deny");
+        }
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setUpdatedAt(LocalDateTime.now());
         userRepo.save(user);
     }

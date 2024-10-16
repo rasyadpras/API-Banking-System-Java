@@ -67,16 +67,31 @@ public class AuthController {
     }
 
     @PatchMapping(
+            path = APIUrl.PATH_FORGOT_PASS,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<SuccessResponse<String>> forgotPassword(@RequestBody ForgotUserPasswordRequest request) {
+        authService.forgotPassword(request);
+        SuccessResponse<String> response = SuccessResponse.<String>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("Password has been changed")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping(
             path = APIUrl.PATH_RESET_PASS,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<String>> forgotPassword(@RequestBody UpdateUserPasswordRequest request) {
-        authService.updatePassword(request);
+    public ResponseEntity<SuccessResponse<String>> resetPassword(@RequestBody ResetUserPasswordRequest request) {
+        authService.resetPassword(request);
         SuccessResponse<String> response = SuccessResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data("Password changed")
+                .data("Password has been changed")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
