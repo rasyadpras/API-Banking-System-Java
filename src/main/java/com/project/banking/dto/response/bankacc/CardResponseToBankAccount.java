@@ -7,7 +7,6 @@ import com.project.banking.utils.constant.CardType;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,11 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class CardResponseToBankAccount {
-    private String id;
+    private String cardId;
     private CardType cardType;
     private String cardNumber;
     private CardPrincipal principal;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-yy")
     private LocalDate validThru;
-    private CardStatus status;
+    private CardStatus cardStatus;
 }

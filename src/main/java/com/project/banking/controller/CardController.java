@@ -55,7 +55,7 @@ public class CardController {
         SuccessResponse<String> response = SuccessResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data("Your card is active now")
+                .data("Card has been activated")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

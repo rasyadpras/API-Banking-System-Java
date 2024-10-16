@@ -21,7 +21,7 @@ public class BankAccountResponse {
     private String accountNumber;
     private BankAccountType bankAccountType;
     private BigDecimal balance;
-    private BankAccountStatus status;
+    private BankAccountStatus bankAccountStatus;
     private List<CardResponseToBankAccount> cards;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;

@@ -15,7 +15,7 @@ import java.util.List;
 public class UserResponseToProfile {
     private String userId;
     private String email;
-    private AccountUserStatus status;
+    private AccountUserStatus accountUserStatus;
     private List<String> roles;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;

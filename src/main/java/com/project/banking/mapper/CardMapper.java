@@ -19,7 +19,7 @@ public class CardMapper {
                 .principal(card.getPrincipal())
                 .validThru(card.getExpiredDate())
                 .cvv(card.getCvv())
-                .status(card.getStatus())
+                .cardStatus(card.getStatus())
                 .activeDate(card.getActiveDate())
                 .updatedAt(card.getUpdatedAt())
                 .build();
@@ -31,7 +31,7 @@ public class CardMapper {
                 .profile(toProfileResponse(bankAccount.getProfile()))
                 .accountNumber(bankAccount.getAccountNumber())
                 .bankAccountType(bankAccount.getType())
-                .status(bankAccount.getStatus())
+                .bankAccountStatus(bankAccount.getStatus())
                 .createdAt(bankAccount.getCreatedAt())
                 .updatedAt(bankAccount.getUpdatedAt())
                 .build();

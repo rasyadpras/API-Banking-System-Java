@@ -35,7 +35,7 @@ public class ProfileMapper {
         return UserResponseToProfile.builder()
                 .userId(user.getId())
                 .email(user.getEmail())
-                .status(user.getStatus())
+                .accountUserStatus(user.getStatus())
                 .roles(user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
@@ -48,7 +48,7 @@ public class ProfileMapper {
                 .branch(toBranchResponse(bankAccount.getBranch()))
                 .accountNumber(bankAccount.getAccountNumber())
                 .bankAccountType(bankAccount.getType())
-                .status(bankAccount.getStatus())
+                .bankAccountStatus(bankAccount.getStatus())
                 .cards(bankAccount.getCards().stream()
                         .map(this::toCardResponse)
                         .collect(Collectors.toList()))
@@ -69,11 +69,11 @@ public class ProfileMapper {
 
     private CardResponseToProfile toCardResponse(Card card) {
         return CardResponseToProfile.builder()
-                .id(card.getId())
+                .cardId(card.getId())
                 .cardType(card.getCardType())
                 .cardNumber(card.getCardNumber())
                 .principal(card.getPrincipal())
-                .status(card.getStatus())
+                .cardStatus(card.getStatus())
                 .build();
     }
 }

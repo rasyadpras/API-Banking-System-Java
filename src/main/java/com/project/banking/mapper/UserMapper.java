@@ -23,7 +23,7 @@ public class UserMapper {
 
     private ProfileResponseToUser toProfileResponse(Profile profile) {
         return ProfileResponseToUser.builder()
-                .id(profile.getId())
+                .profileId(profile.getId())
                 .fullName(profile.getFullName())
                 .gender(profile.getGender())
                 .build();

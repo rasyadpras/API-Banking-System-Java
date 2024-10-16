@@ -18,7 +18,7 @@ public class BankAccountResponseToProfile {
     private BranchResponseToProfile branch;
     private String accountNumber;
     private BankAccountType bankAccountType;
-    private BankAccountStatus status;
+    private BankAccountStatus bankAccountStatus;
     private List<CardResponseToProfile> cards;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;

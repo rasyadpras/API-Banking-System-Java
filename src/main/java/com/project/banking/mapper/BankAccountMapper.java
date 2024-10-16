@@ -13,7 +13,7 @@ public class BankAccountMapper {
                 .profile(toProfileResponse(bankAccount.getProfile()))
                 .accountNumber(bankAccount.getAccountNumber())
                 .bankAccountType(bankAccount.getType())
-                .status(bankAccount.getStatus())
+                .bankAccountStatus(bankAccount.getStatus())
                 .cards(bankAccount.getCards().stream()
                         .map(this::toCardResponse)
                         .toList())
@@ -24,12 +24,12 @@ public class BankAccountMapper {
 
     private CardResponseToBankAccount toCardResponse(Card card) {
         return CardResponseToBankAccount.builder()
-                .id(card.getId())
+                .cardId(card.getId())
                 .cardType(card.getCardType())
                 .cardNumber(card.getCardNumber())
                 .principal(card.getPrincipal())
                 .validThru(card.getExpiredDate())
-                .status(card.getStatus())
+                .cardStatus(card.getStatus())
                 .build();
     }
 

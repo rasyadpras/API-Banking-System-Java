@@ -23,7 +23,7 @@ public class CardResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-yy")
     private LocalDate validThru;
     private String cvv;
-    private CardStatus status;
+    private CardStatus cardStatus;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime activeDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

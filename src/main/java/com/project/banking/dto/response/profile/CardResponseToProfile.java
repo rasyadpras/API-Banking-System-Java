@@ -11,9 +11,9 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CardResponseToProfile {
-    private String id;
+    private String cardId;
     private CardType cardType;
     private String cardNumber;
     private CardPrincipal principal;
-    private CardStatus status;
+    private CardStatus cardStatus;
 }
