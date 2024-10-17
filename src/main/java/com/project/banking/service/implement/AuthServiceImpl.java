@@ -94,7 +94,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) throws DataIntegrityViolationException {
-        User user = userService.findByEmail(request.getEmail());
+        User user = userRepo.findByEmail(request.getEmail()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not registered")
+        );
 
         if (user.getAttempt() >= 5) {
             user.setUnlocked(false);
@@ -150,7 +152,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserResponse addRole(UpdateUserAddRoleRequest request) {
         validation.validate(request);
-        User user = userService.findId(request.getUserId());
+        User user = userRepo.findById(request.getUserId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        );
 
         List<Role> roles = user.getRoles();
         switch (request.getRole().toLowerCase()) {
@@ -170,7 +174,9 @@ public class AuthServiceImpl implements AuthService {
     public void forgotPassword(ForgotUserPasswordRequest request) {
         validation.validate(request);
         User currentUser = userService.getByContext();
-        User user = userService.findId(request.getUserId());
+        User user = userRepo.findById(request.getUserId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        );
 
         if (!currentUser.getEmail().equals(user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access deny");
@@ -186,7 +192,9 @@ public class AuthServiceImpl implements AuthService {
     public void resetPassword(ResetUserPasswordRequest request) {
         validation.validate(request);
         User currentUser = userService.getByContext();
-        User user = userService.findId(request.getUserId());
+        User user = userRepo.findById(request.getUserId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        );
 
         if (!currentUser.getEmail().equals(user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access deny");
@@ -204,7 +212,10 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void verify(String id) {
-        User user = userService.findId(id);
+        User user = userRepo.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        );
+
         if (user.getStatus().equals(AccountUserStatus.ACTIVE)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your account is already active");
         }
@@ -220,7 +231,10 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unlock(String id) {
-        User user = userService.findId(id);
+        User user = userRepo.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        );
+
         if (user.isUnlocked()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your account is already active");
         }

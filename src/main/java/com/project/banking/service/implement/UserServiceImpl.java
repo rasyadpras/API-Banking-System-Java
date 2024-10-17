@@ -26,17 +26,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public User findByEmail(String email) {
-        return userRepo.findByEmail(email).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not registered")
-        );
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public User getByContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("========================== The user: " + authentication.getPrincipal().toString());
         return userRepo.findByEmail(authentication.getPrincipal().toString()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
         );

@@ -4,6 +4,5 @@ import com.project.banking.entity.User;
 
 public interface UserService {
     User findId(String id);
-    User findByEmail(String email);
     User getByContext();
 }
