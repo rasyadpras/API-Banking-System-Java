@@ -51,8 +51,7 @@ public class BankAccountController {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @PatchMapping(
             path = APIUrl.PATH_CLOSE + APIUrl.PATH_ID,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<String>> closeAccount(@PathVariable String id) {
         bankAccountService.delete(id);

@@ -47,8 +47,11 @@ public class User implements UserDetails {
     @Column(name = "login_attempt", nullable = false)
     private int attempt;
 
-    @Column(name = "is_unlocked", nullable = false, columnDefinition = "boolean DEFAULT TRUE")
+    @Column(name = "is_unlocked", nullable = false)
     private boolean isUnlocked;
+
+    @Column(name = "is_verified", nullable = false)
+    private boolean isVerified;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -84,6 +87,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isVerified;
     }
 }

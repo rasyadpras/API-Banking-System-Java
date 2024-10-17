@@ -29,8 +29,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/docs").permitAll()
-                        .requestMatchers("/**").permitAll()
-//                        .requestMatchers(APIUrl.AUTHENTICATION_API + "/**").permitAll()
+//                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(APIUrl.AUTHENTICATION_API + "/login").permitAll()
 //                        .requestMatchers(APIUrl.TRANSACTION_API + "/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)

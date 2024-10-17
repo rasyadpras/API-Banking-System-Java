@@ -23,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final ProfileService profileService;
-    private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
@@ -69,6 +69,7 @@ public class AuthServiceImpl implements AuthService {
                 .status(AccountUserStatus.ACTIVE)
                 .attempt(0)
                 .isUnlocked(true)
+                .isVerified(true)
                 .createdAt(LocalDateTime.now())
                 .build();
         userRepo.save(user);
@@ -85,6 +86,7 @@ public class AuthServiceImpl implements AuthService {
                 .status(AccountUserStatus.NOT_VERIFIED)
                 .attempt(0)
                 .isUnlocked(true)
+                .isVerified(false)
                 .createdAt(LocalDateTime.now())
                 .profile(profileService.create(request))
                 .build();
@@ -109,9 +111,7 @@ public class AuthServiceImpl implements AuthService {
                     request.getEmail(),
                     request.getPassword()
             );
-            System.out.println("authentication ============================== " + authentication);
             Authentication authenticated = authenticationManager.authenticate(authentication);
-            System.out.println("authenticated ============================== " + authenticated);
             User authenticatedUser = (User) authenticated.getPrincipal();
             String token = jwtService.generateToken(authenticatedUser);
 
@@ -124,29 +124,6 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-
-//    @Override
-//    public LoginResponse login(LoginRequest request) {
-//        validation.validate(request);
-//        Optional<User> userOptional = userRepo.findByEmail(request.getEmail());
-//        if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
-//            throw new BadCredentialsException("Invalid email or password");
-//        }
-//        User account = userOptional.get();
-//        String token = jwtService.generateToken(account);
-//        return loginMapper.toLoginResponse(account, token);
-//    }
-
-//    @Override
-//    public LoginResponse login(LoginRequest request) {
-//        validation.validate(request);
-//        User currentUser = userService.getByContext();
-//        if (!passwordEncoder.matches(request.getPassword(), currentUser.getPassword())) {
-//            throw new BadCredentialsException("Invalid email or password");
-//        }
-//        String token = jwtService.generateToken(currentUser);
-//        return loginMapper.toLoginResponse(currentUser, token);
-//    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -173,7 +150,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void forgotPassword(ForgotUserPasswordRequest request) {
         validation.validate(request);
-        User currentUser = userService.getByContext();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepo.findByEmail(authentication.getPrincipal().toString()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
+        );
+
         User user = userRepo.findById(request.getUserId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         );
@@ -191,7 +173,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void resetPassword(ResetUserPasswordRequest request) {
         validation.validate(request);
-        User currentUser = userService.getByContext();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepo.findByEmail(authentication.getPrincipal().toString()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
+        );
+
         User user = userRepo.findById(request.getUserId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         );
@@ -224,7 +211,7 @@ public class AuthServiceImpl implements AuthService {
         }
         user.setStatus(AccountUserStatus.ACTIVE);
         user.setUpdatedAt(LocalDateTime.now());
-        user.isEnabled();
+        user.setVerified(true);
         userRepo.save(user);
     }
 

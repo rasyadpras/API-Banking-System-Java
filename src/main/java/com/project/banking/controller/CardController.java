@@ -47,8 +47,7 @@ public class CardController {
 
     @PatchMapping(
             path = APIUrl.PATH_UNBLOCK + APIUrl.PATH_ID,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<String>> unblockCard(@PathVariable String id) {
         cardService.unblock(id);

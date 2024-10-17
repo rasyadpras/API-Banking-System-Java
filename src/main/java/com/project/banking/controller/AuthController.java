@@ -99,8 +99,7 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @PatchMapping(
             path = APIUrl.PATH_VERIFY + APIUrl.PATH_ID,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<String>> verifyAccount(@PathVariable String id) {
         authService.verify(id);
@@ -115,8 +114,7 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @PatchMapping(
             path = APIUrl.PATH_UNLOCK + APIUrl.PATH_ID,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<String>> unlockAccount(@PathVariable String id) {
         authService.unlock(id);
