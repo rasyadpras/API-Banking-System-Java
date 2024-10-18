@@ -13,15 +13,20 @@ import com.project.banking.utils.constant.CardPrincipal;
 import com.project.banking.utils.constant.CardStatus;
 import com.project.banking.utils.constant.CardType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepo;
     private final ValidationUtil validation;
@@ -94,11 +99,27 @@ public class CardServiceImpl implements CardService {
         cardRepo.save(card);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(readOnly = true)
     @Override
     public Card findId(String id) {
         return cardRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found")
         );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Scheduled(cron = "@daily")
+    @Override
+    public void checkExpCard() {
+        List<Card> expiredCard = cardRepo.findExpiredCard(LocalDate.now());
+
+        for (Card card : expiredCard) {
+            if (!card.getStatus().equals(CardStatus.EXPIRED)) {
+                card.setStatus(CardStatus.EXPIRED);
+                card.setUpdatedAt(LocalDateTime.now());
+                cardRepo.save(card);
+                log.info("Card with ID {} is set to 'EXPIRED'", card.getId());
+            }
+        }
     }
 }
