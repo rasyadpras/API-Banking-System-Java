@@ -15,11 +15,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = APIUrl.TRANSACTION_API + APIUrl.PATH_TRANSFER)
+@RequestMapping(path = APIUrl.TRANSACTION_API)
 public class TransferController {
     private final TransferService transferService;
 
     @PostMapping(
+            path = APIUrl.PATH_TRANSFER,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
@@ -34,7 +35,7 @@ public class TransferController {
     }
 
     @GetMapping(
-            path = APIUrl.PATH_ID,
+            path = APIUrl.PATH_TRANSFER + APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<TransferResponse>> getTransferById(@PathVariable String id) {
@@ -47,9 +48,12 @@ public class TransferController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SuccessResponse<List<TransferResponse>>> getAllTransferByUser() {
-        List<TransferResponse> list = transferService.getAllTransferTransactionByUser();
+    @GetMapping(
+            path = APIUrl.PATH_BANK_ACCOUNT_ID + APIUrl.PATH_TRANSFER,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<SuccessResponse<List<TransferResponse>>> getAllTransferByUser(@PathVariable String bankAccId) {
+        List<TransferResponse> list = transferService.getAllTransferTransactionByUser(bankAccId);
         SuccessResponse<List<TransferResponse>> response = SuccessResponse.<List<TransferResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -59,11 +63,11 @@ public class TransferController {
     }
 
     @GetMapping(
-            path = APIUrl.PATH_SENDER,
+            path = APIUrl.PATH_BANK_ACCOUNT_ID + APIUrl.PATH_TRANSFER + APIUrl.PATH_SENDER,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<List<TransferResponse>>> getAllBySender() {
-        List<TransferResponse> list = transferService.getAllBySender();
+    public ResponseEntity<SuccessResponse<List<TransferResponse>>> getAllBySender(@PathVariable String bankAccId) {
+        List<TransferResponse> list = transferService.getAllBySender(bankAccId);
         SuccessResponse<List<TransferResponse>> response = SuccessResponse.<List<TransferResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -73,11 +77,11 @@ public class TransferController {
     }
 
     @GetMapping(
-            path = APIUrl.PATH_RECEIVER,
+            path = APIUrl.PATH_BANK_ACCOUNT_ID + APIUrl.PATH_TRANSFER + APIUrl.PATH_RECEIVER,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<List<TransferResponse>>> getAllByReceiver() {
-        List<TransferResponse> list = transferService.getAllByReceiver();
+    public ResponseEntity<SuccessResponse<List<TransferResponse>>> getAllByReceiver(@PathVariable String bankAccId) {
+        List<TransferResponse> list = transferService.getAllByReceiver(bankAccId);
         SuccessResponse<List<TransferResponse>> response = SuccessResponse.<List<TransferResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

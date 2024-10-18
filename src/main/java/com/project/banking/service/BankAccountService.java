@@ -12,6 +12,5 @@ public interface BankAccountService {
     void delete(String id);
 
     BankAccount findId(String id);
-    List<BankAccount> findProfile(String id);
     BankAccount findByAccountNumber(String accountNumber);
 }

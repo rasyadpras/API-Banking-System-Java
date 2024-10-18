@@ -5,7 +5,6 @@ import com.project.banking.dto.response.transfer.TransferResponse;
 import com.project.banking.entity.BankAccount;
 import com.project.banking.entity.Profile;
 import com.project.banking.entity.Transfer;
-import com.project.banking.entity.User;
 import com.project.banking.mapper.TransferMapper;
 import com.project.banking.repository.TransferRepository;
 import com.project.banking.service.BankAccountService;
@@ -40,8 +39,7 @@ public class TransferServiceImpl implements TransferService {
     public TransferResponse create(CreateTransferRequest request) {
         validation.validate(request);
 
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
+        Profile currentUser = userService.getByContext().getProfile();
         BankAccount sourceAcc = bankAccountService.findByAccountNumber(request.getSourceAccountNumber());
         BankAccount destinationAcc = bankAccountService.findByAccountNumber(request.getDestinationAccountNumber());
         BigDecimal convertedAmount = converter.convertToBigDecimal(request.getAmount());
@@ -75,8 +73,7 @@ public class TransferServiceImpl implements TransferService {
     @Transactional(readOnly = true)
     @Override
     public TransferResponse getById(String id) {
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
+        Profile currentUser = userService.getByContext().getProfile();
         Transfer transfer = findId(id);
 
         if (!currentUser.getId().equals(transfer.getSourceAccount().getProfile().getId())) {
@@ -88,31 +85,43 @@ public class TransferServiceImpl implements TransferService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TransferResponse> getAllBySender() {
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
-        List<BankAccount> accounts = bankAccountService.findProfile(currentUser.getId());
-        List<Transfer> transfers = transferRepo.findAllBySenderAcc(accounts.stream().map(BankAccount::getId).toList());
+    public List<TransferResponse> getAllBySender(String bankAccId) {
+        Profile currentUser = userService.getByContext().getProfile();
+        BankAccount account = bankAccountService.findId(bankAccId);
+
+        if (!currentUser.getId().equals(account.getProfile().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this transaction");
+        }
+
+        List<Transfer> transfers = transferRepo.findAllBySenderAcc(bankAccId);
         return transfers.stream().map(mapper::toTransferResponse).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<TransferResponse> getAllByReceiver() {
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
-        List<BankAccount> accounts = bankAccountService.findProfile(currentUser.getId());
-        List<Transfer> transfers = transferRepo.findAllByReceiverAcc(accounts.stream().map(BankAccount::getId).toList());
+    public List<TransferResponse> getAllByReceiver(String bankAccId) {
+        Profile currentUser = userService.getByContext().getProfile();
+        BankAccount account = bankAccountService.findId(bankAccId);
+
+        if (!currentUser.getId().equals(account.getProfile().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this transaction");
+        }
+
+        List<Transfer> transfers = transferRepo.findAllByReceiverAcc(bankAccId);
         return transfers.stream().map(mapper::toTransferResponse).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<TransferResponse> getAllTransferTransactionByUser() {
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
-        List<BankAccount> accounts = bankAccountService.findProfile(currentUser.getId());
-        List<Transfer> transfers = transferRepo.findAllByUserTransfer(accounts.stream().map(BankAccount::getId).toList());
+    public List<TransferResponse> getAllTransferTransactionByUser(String bankAccId) {
+        Profile currentUser = userService.getByContext().getProfile();
+        BankAccount account = bankAccountService.findId(bankAccId);
+
+        if (!currentUser.getId().equals(account.getProfile().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this transaction");
+        }
+
+        List<Transfer> transfers = transferRepo.findAllByUserTransfer(bankAccId);
         return transfers.stream().map(mapper::toTransferResponse).toList();
     }
 

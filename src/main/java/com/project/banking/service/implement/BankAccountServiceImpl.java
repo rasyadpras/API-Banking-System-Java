@@ -110,12 +110,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         );
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<BankAccount> findProfile(String id) {
-        return bankAccountRepo.findByProfileId(id);
-    }
-
     @Override
     public BankAccount findByAccountNumber(String accountNumber) {
         return bankAccountRepo.findByAccountNumber(accountNumber).orElseThrow(

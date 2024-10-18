@@ -9,9 +9,9 @@ import java.util.List;
 public interface TransferService {
     TransferResponse create(CreateTransferRequest request);
     TransferResponse getById(String id);
-    List<TransferResponse> getAllBySender();
-    List<TransferResponse> getAllByReceiver();
-    List<TransferResponse> getAllTransferTransactionByUser();
+    List<TransferResponse> getAllBySender(String bankAccId);
+    List<TransferResponse> getAllByReceiver(String bankAccId);
+    List<TransferResponse> getAllTransferTransactionByUser(String bankAccId);
 
     Transfer findId(String id);
 }

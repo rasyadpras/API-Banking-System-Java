@@ -14,5 +14,5 @@ public interface CashTransactionRepository extends JpaRepository<CashTransaction
             value = "SELECT * FROM cash_transactions t WHERE t.bank_account_id = :id",
             nativeQuery = true
     )
-    List<CashTransaction> findAllByUserTransaction(@Param("id") List<String> id);
+    List<CashTransaction> findAllByUserTransaction(@Param("id") String id);
 }

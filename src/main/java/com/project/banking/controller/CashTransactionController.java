@@ -16,13 +16,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = APIUrl.TRANSACTION_API + APIUrl.PATH_CASH)
+@RequestMapping(path = APIUrl.TRANSACTION_API)
 public class CashTransactionController {
     private final CashTransactionService cashTransactionService;
 
     @PreAuthorize("hasAnyRole('OFFICER')")
     @PostMapping(
-            path = APIUrl.PATH_DEPOSIT,
+            path = APIUrl.PATH_CASH + APIUrl.PATH_DEPOSIT,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
@@ -38,7 +38,7 @@ public class CashTransactionController {
 
     @PreAuthorize("hasAnyRole('OFFICER')")
     @PostMapping(
-            path = APIUrl.PATH_WITHDRAW,
+            path = APIUrl.PATH_CASH + APIUrl.PATH_WITHDRAW,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
@@ -53,7 +53,7 @@ public class CashTransactionController {
     }
 
     @GetMapping(
-            path = APIUrl.PATH_ID,
+            path = APIUrl.PATH_CASH + APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<CashTransactionResponse>> getTransactionById(@PathVariable String id) {
@@ -66,9 +66,14 @@ public class CashTransactionController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SuccessResponse<List<CashTransactionResponse>>> getAllTransactionByUser() {
-        List<CashTransactionResponse> list = cashTransactionService.getAllCashTransactionByUser();
+    @GetMapping(
+            path = APIUrl.PATH_BANK_ACCOUNT_ID + APIUrl.PATH_CASH,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<SuccessResponse<List<CashTransactionResponse>>> getAllTransactionByUser(
+            @PathVariable String bankAccId
+    ) {
+        List<CashTransactionResponse> list = cashTransactionService.getAllCashTransactionByUser(bankAccId);
         SuccessResponse<List<CashTransactionResponse>> response = SuccessResponse.<List<CashTransactionResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

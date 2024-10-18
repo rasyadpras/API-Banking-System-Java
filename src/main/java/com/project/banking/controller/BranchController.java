@@ -38,8 +38,10 @@ public class BranchController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SuccessResponse<List<BranchResponse>>> getAllBranches() {
-        List<BranchResponse> list = branchService.getAll();
+    public ResponseEntity<SuccessResponse<List<BranchResponse>>> getAllBranches(
+            @RequestParam(name = "region", required = false) String region
+    ) {
+        List<BranchResponse> list = branchService.getAll(region);
         SuccessResponse<List<BranchResponse>> response = SuccessResponse.<List<BranchResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

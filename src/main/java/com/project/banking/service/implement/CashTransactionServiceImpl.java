@@ -5,7 +5,6 @@ import com.project.banking.dto.response.cashtrx.CashTransactionResponse;
 import com.project.banking.entity.BankAccount;
 import com.project.banking.entity.CashTransaction;
 import com.project.banking.entity.Profile;
-import com.project.banking.entity.User;
 import com.project.banking.mapper.CashTransactionMapper;
 import com.project.banking.repository.CashTransactionRepository;
 import com.project.banking.service.BankAccountService;
@@ -91,8 +90,7 @@ public class CashTransactionServiceImpl implements CashTransactionService {
     @Transactional(readOnly = true)
     @Override
     public CashTransactionResponse getById(String id) {
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
+        Profile currentUser = userService.getByContext().getProfile();
         CashTransaction transaction = findId(id);
 
         if (!currentUser.getId().equals(transaction.getBankAccount().getProfile().getId())) {
@@ -104,13 +102,15 @@ public class CashTransactionServiceImpl implements CashTransactionService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<CashTransactionResponse> getAllCashTransactionByUser() {
-        User userByContext = userService.getByContext();
-        Profile currentUser = userByContext.getProfile();
-        List<BankAccount> accounts = bankAccountService.findProfile(currentUser.getId());
-        List<CashTransaction> transactions = cashTransactionRepo.findAllByUserTransaction(accounts.stream()
-                .map(BankAccount::getId)
-                .toList());
+    public List<CashTransactionResponse> getAllCashTransactionByUser(String bankAccId) {
+        Profile currentUser = userService.getByContext().getProfile();
+        BankAccount account = bankAccountService.findId(bankAccId);
+
+        if (!currentUser.getId().equals(account.getProfile().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this transaction");
+        }
+
+        List<CashTransaction> transactions = cashTransactionRepo.findAllByUserTransaction(bankAccId);
         return transactions.stream().map(mapper::toCashTransactionResponse).toList();
     }
 

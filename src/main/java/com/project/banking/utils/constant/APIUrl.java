@@ -9,6 +9,7 @@ public class APIUrl {
     public static final String CARD_API = "/api/v1/cards";
 
     public static final String PATH_ID = "/{id}";
+    public static final String PATH_BANK_ACCOUNT_ID = "/{bankAccId}";
     public static final String PATH_REGISTER = "/register";
     public static final String PATH_LOGIN = "/login";
     public static final String PATH_ADD_ROLE = "/role";

@@ -41,9 +41,14 @@ public class BranchServiceImpl implements BranchService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BranchResponse> getAll() {
-        List<Branch> branchList = branchRepo.findAll();
-        return branchList.stream().map(mapper::toBranchResponse).toList();
+    public List<BranchResponse> getAll(String region) {
+        List<Branch> branches;
+        if (region != null) {
+            branches = branchRepo.findAllByRegion(region);
+        } else {
+            branches = branchRepo.findAll();
+        }
+        return branches.stream().map(mapper::toBranchResponse).toList();
     }
 
     @Transactional(rollbackFor = Exception.class)

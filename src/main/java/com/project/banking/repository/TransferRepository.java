@@ -14,13 +14,13 @@ public interface TransferRepository extends JpaRepository<Transfer, String> {
             value = "SELECT * FROM transfer_transactions t WHERE t.source_account_id = :id",
             nativeQuery = true
     )
-    List<Transfer> findAllBySenderAcc(@Param("id") List<String> sourceAccountId);
+    List<Transfer> findAllBySenderAcc(@Param("id") String sourceAccountId);
 
     @Query(
             value = "SELECT * FROM transfer_transactions t WHERE t.destination_account_id = :id",
             nativeQuery = true
     )
-    List<Transfer> findAllByReceiverAcc(@Param("id") List<String> destinationAccountId);
+    List<Transfer> findAllByReceiverAcc(@Param("id") String destinationAccountId);
 
     @Query(value = """
             SELECT * FROM transfer_transactions t WHERE t.source_account_id = :id
@@ -28,5 +28,5 @@ public interface TransferRepository extends JpaRepository<Transfer, String> {
             SELECT * FROM transfer_transactions t WHERE t.destination_account_id = :id
             """, nativeQuery = true
     )
-    List<Transfer> findAllByUserTransfer(@Param("id") List<String> id);
+    List<Transfer> findAllByUserTransfer(@Param("id") String id);
 }

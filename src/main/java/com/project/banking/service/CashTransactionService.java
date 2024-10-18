@@ -10,7 +10,7 @@ public interface CashTransactionService {
     CashTransactionResponse cashDeposit(CreateCashTransactionRequest request);
     CashTransactionResponse cashWithdrawal(CreateCashTransactionRequest request);
     CashTransactionResponse getById(String id);
-    List<CashTransactionResponse> getAllCashTransactionByUser();
+    List<CashTransactionResponse> getAllCashTransactionByUser(String bankAccId);
 
     CashTransaction findId(String id);
 }
