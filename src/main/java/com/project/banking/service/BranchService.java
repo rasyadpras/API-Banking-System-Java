@@ -10,7 +10,7 @@ import java.util.List;
 public interface BranchService {
     BranchResponse create(CreateBranchRequest request);
     List<BranchResponse> getAll();
-    BranchResponse update(UpdateBranchRequest request);
+    BranchResponse update(UpdateBranchRequest request, String id);
 
     Branch findId(String id);
 }

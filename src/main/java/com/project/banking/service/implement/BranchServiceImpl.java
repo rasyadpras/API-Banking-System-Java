@@ -48,9 +48,9 @@ public class BranchServiceImpl implements BranchService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public BranchResponse update(UpdateBranchRequest request) {
+    public BranchResponse update(UpdateBranchRequest request, String id) {
         validation.validate(request);
-        Branch branch = findId(request.getBranchId());
+        Branch branch = findId(id);
         branch.setBranchName(request.getBranchName());
         branch.setAddress(request.getAddress());
         branch.setUpdatedAt(LocalDateTime.now());

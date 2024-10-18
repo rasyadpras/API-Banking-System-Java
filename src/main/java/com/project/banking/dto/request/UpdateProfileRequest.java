@@ -11,9 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class UpdateProfileRequest {
-    @NotBlank(message = "Profile id must be not blank")
-    private String profileId;
-
     @NotBlank(message = "Full name must be not blank")
     private String fullName;
 

@@ -127,9 +127,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public UserResponse addRole(UpdateUserAddRoleRequest request) {
+    public UserResponse addRole(UpdateUserAddRoleRequest request, String id) {
         validation.validate(request);
-        User user = userRepo.findById(request.getUserId()).orElseThrow(
+        User user = userRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         );
 
@@ -148,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void forgotPassword(ForgotUserPasswordRequest request) {
+    public void forgotPassword(ForgotUserPasswordRequest request, String id) {
         validation.validate(request);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
         );
 
-        User user = userRepo.findById(request.getUserId()).orElseThrow(
+        User user = userRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         );
 
@@ -171,7 +171,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void resetPassword(ResetUserPasswordRequest request) {
+    public void resetPassword(ResetUserPasswordRequest request, String id) {
         validation.validate(request);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -179,7 +179,7 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
         );
 
-        User user = userRepo.findById(request.getUserId()).orElseThrow(
+        User user = userRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         );
 

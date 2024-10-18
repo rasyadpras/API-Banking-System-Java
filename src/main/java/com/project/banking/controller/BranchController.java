@@ -50,11 +50,15 @@ public class BranchController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     @PatchMapping(
+            path = APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<BranchResponse>> updateBranch(@RequestBody UpdateBranchRequest request) {
-        BranchResponse branch = branchService.update(request);
+    public ResponseEntity<SuccessResponse<BranchResponse>> updateBranch(
+            @RequestBody UpdateBranchRequest request,
+            @PathVariable String id
+    ) {
+        BranchResponse branch = branchService.update(request, id);
         SuccessResponse<BranchResponse> response = SuccessResponse.<BranchResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

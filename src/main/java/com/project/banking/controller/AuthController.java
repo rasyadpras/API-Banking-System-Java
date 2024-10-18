@@ -52,12 +52,15 @@ public class AuthController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     @PatchMapping(
-            path = APIUrl.PATH_ADD_ROLE,
+            path = APIUrl.PATH_ADD_ROLE + APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<UserResponse>> addRole(@RequestBody UpdateUserAddRoleRequest request) {
-        UserResponse user = authService.addRole(request);
+    public ResponseEntity<SuccessResponse<UserResponse>> addRole(
+            @RequestBody UpdateUserAddRoleRequest request,
+            @PathVariable String id
+    ) {
+        UserResponse user = authService.addRole(request, id);
         SuccessResponse<UserResponse> response = SuccessResponse.<UserResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -67,12 +70,15 @@ public class AuthController {
     }
 
     @PatchMapping(
-            path = APIUrl.PATH_FORGOT_PASS,
+            path = APIUrl.PATH_FORGOT_PASS + APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<String>> forgotPassword(@RequestBody ForgotUserPasswordRequest request) {
-        authService.forgotPassword(request);
+    public ResponseEntity<SuccessResponse<String>> forgotPassword(
+            @RequestBody ForgotUserPasswordRequest request,
+            @PathVariable String id
+    ) {
+        authService.forgotPassword(request, id);
         SuccessResponse<String> response = SuccessResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -82,12 +88,15 @@ public class AuthController {
     }
 
     @PatchMapping(
-            path = APIUrl.PATH_RESET_PASS,
+            path = APIUrl.PATH_RESET_PASS + APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<String>> resetPassword(@RequestBody ResetUserPasswordRequest request) {
-        authService.resetPassword(request);
+    public ResponseEntity<SuccessResponse<String>> resetPassword(
+            @RequestBody ResetUserPasswordRequest request,
+            @PathVariable String id
+    ) {
+        authService.resetPassword(request, id);
         SuccessResponse<String> response = SuccessResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

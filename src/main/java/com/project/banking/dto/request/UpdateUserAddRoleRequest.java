@@ -10,9 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class UpdateUserAddRoleRequest {
-    @NotBlank(message = "User id must be not blank")
-    private String userId;
-
     @NotBlank(message = "Password required")
     private String role;
 }

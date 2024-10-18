@@ -69,9 +69,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ProfileResponse update(UpdateProfileRequest request) {
+    public ProfileResponse update(UpdateProfileRequest request, String id) {
         validation.validate(request);
-        Profile profile = findId(request.getProfileId());
+        Profile profile = findId(id);
 
         profile.setFullName(request.getFullName());
         profile.setGender(inputGender(request.getGender()));

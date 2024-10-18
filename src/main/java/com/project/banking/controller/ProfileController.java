@@ -51,11 +51,15 @@ public class ProfileController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @PutMapping(
+            path = APIUrl.PATH_ID,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SuccessResponse<ProfileResponse>> updateProfile(@RequestBody UpdateProfileRequest request) {
-        ProfileResponse profile = profileService.update(request);
+    public ResponseEntity<SuccessResponse<ProfileResponse>> updateProfile(
+            @RequestBody UpdateProfileRequest request,
+            @PathVariable String id
+    ) {
+        ProfileResponse profile = profileService.update(request, id);
         SuccessResponse<ProfileResponse> response = SuccessResponse.<ProfileResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

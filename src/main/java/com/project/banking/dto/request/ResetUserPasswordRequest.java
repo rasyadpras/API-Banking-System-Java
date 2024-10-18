@@ -10,9 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ResetUserPasswordRequest {
-    @NotBlank(message = "User id must be not blank")
-    private String userId;
-
     @NotBlank(message = "Enter your last password")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,}$",

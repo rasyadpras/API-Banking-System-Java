@@ -9,9 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class UpdateBranchRequest {
-    @NotBlank(message = "Branch id code must be not blank")
-    private String branchId;
-
     @NotBlank(message = "Branch name must be not blank")
     private String branchName;
 

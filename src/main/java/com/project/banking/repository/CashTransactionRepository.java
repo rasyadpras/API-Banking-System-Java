@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CashTransactionRepository extends JpaRepository<CashTransaction, String> {
     @Query(
-            value = "SELECT * FROM cash_transaction t WHERE t.bank_account_id = :id",
+            value = "SELECT * FROM cash_transactions t WHERE t.bank_account_id = :id",
             nativeQuery = true
     )
     List<CashTransaction> findAllByUserTransaction(@Param("id") List<String> id);

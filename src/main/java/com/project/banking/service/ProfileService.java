@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProfileService {
     List<ProfileResponse> getAll(String city);
     ProfileResponse getById(String id);
-    ProfileResponse update(UpdateProfileRequest request);
+    ProfileResponse update(UpdateProfileRequest request, String id);
 
     Profile create(RegisterRequest request);
     Profile findId(String id);

@@ -8,9 +8,9 @@ import com.project.banking.dto.response.useracc.UserResponse;
 public interface AuthService {
     RegisterResponse register(RegisterRequest request);
     LoginResponse login(LoginRequest request);
-    UserResponse addRole(UpdateUserAddRoleRequest request);
-    void forgotPassword(ForgotUserPasswordRequest request);
-    void resetPassword(ResetUserPasswordRequest request);
+    UserResponse addRole(UpdateUserAddRoleRequest request, String id);
+    void forgotPassword(ForgotUserPasswordRequest request, String id);
+    void resetPassword(ResetUserPasswordRequest request, String id);
     void verify(String id);
     void unlock(String id);
 }
