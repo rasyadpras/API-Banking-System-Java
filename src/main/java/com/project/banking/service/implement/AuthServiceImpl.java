@@ -94,13 +94,14 @@ public class AuthServiceImpl implements AuthService {
         return registerMapper.toRegisterResponse(user);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public LoginResponse login(LoginRequest request) throws DataIntegrityViolationException {
         User user = userRepo.findByEmail(request.getEmail()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not registered")
         );
 
-        if (user.getAttempt() >= 5) {
+        if (!user.getEmail().equals(superAdminEmail) && user.getAttempt() >= 5) {
             user.setUnlocked(false);
             userRepo.save(user);
             throw new ResponseStatusException(HttpStatus.LOCKED, "Account is locked due to too many failed login attempts");
@@ -119,8 +120,10 @@ public class AuthServiceImpl implements AuthService {
             userRepo.saveAndFlush(user);
             return loginMapper.toLoginResponse(authenticatedUser, token);
         } catch (BadCredentialsException e) {
-            user.setAttempt(user.getAttempt() + 1);
-            userRepo.save(user);
+            if (!user.getEmail().equals(superAdminEmail)) {
+                user.setAttempt(user.getAttempt() + 1);
+                userRepo.save(user);
+            }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
