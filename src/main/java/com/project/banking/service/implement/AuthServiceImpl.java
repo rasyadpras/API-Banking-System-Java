@@ -98,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) throws DataIntegrityViolationException {
         User user = userRepo.findByEmail(request.getEmail()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not registered")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "E-mail not registered")
         );
 
         if (!user.getEmail().equals(superAdminEmail) && user.getAttempt() >= 5) {
@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepo.findByEmail(authentication.getPrincipal().toString()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "E-mail not found")
         );
 
         User user = userRepo.findById(id).orElseThrow(
@@ -179,7 +179,7 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepo.findByEmail(authentication.getPrincipal().toString()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "E-mail not found")
         );
 
         User user = userRepo.findById(id).orElseThrow(

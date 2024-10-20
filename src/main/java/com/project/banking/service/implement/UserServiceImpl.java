@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public User getByContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userRepo.findByEmail(authentication.getPrincipal().toString()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "E-mail not found")
         );
     }
 
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByEmail(username).orElseThrow(
-                () -> new UsernameNotFoundException("Email not found")
+                () -> new UsernameNotFoundException("E-mail not found")
         );
     }
 }
