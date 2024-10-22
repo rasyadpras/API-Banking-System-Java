@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/docs").permitAll()
+                        .requestMatchers(APIUrl.DOCUMENTATION_API, "/v3/api-docs/**", "/swagger-ui/**", "/openapi").permitAll()
                         .requestMatchers(APIUrl.AUTHENTICATION_API + "/**").permitAll()
                         .requestMatchers(APIUrl.PROFILE_API + "/**").permitAll()
                         .requestMatchers(APIUrl.BANK_ACCOUNT_API + "/**").permitAll()

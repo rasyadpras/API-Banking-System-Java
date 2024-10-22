@@ -1,6 +1,8 @@
 package com.project.banking.utils.constant;
 
 public class APIUrl {
+    public static final String DOCUMENTATION_API = "/docs";
+
     public static final String AUTHENTICATION_API = "/api/v1/auth";
     public static final String BANK_ACCOUNT_API = "/api/v1/bank-accounts";
     public static final String BRANCH_API = "/api/v1/branches";
