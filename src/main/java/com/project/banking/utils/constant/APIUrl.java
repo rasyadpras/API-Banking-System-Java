@@ -13,11 +13,11 @@ public class APIUrl {
     public static final String PATH_REGISTER = "/register";
     public static final String PATH_LOGIN = "/login";
     public static final String PATH_ADD_ROLE = "/role";
-    public static final String PATH_VERIFY = "/verify-acc";
     public static final String PATH_FORGOT_PASS = "/forgot-password";
     public static final String PATH_RESET_PASS = "/reset-password";
-    public static final String PATH_UNLOCK = "/unlock-acc";
-    public static final String PATH_CLOSE = "/close-acc";
+    public static final String PATH_VERIFY = "/verify";
+    public static final String PATH_UNLOCK = "/unlock";
+    public static final String PATH_CLOSE = "/close";
     public static final String PATH_TRANSFER = "/transfer";
     public static final String PATH_CASH = "/cash-flow";
     public static final String PATH_DEPOSIT = "/deposit";

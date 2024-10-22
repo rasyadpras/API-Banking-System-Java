@@ -40,4 +40,8 @@ public class ConverterUtil {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Convert failed. Invalid number format");
         }
     }
+
+    public String formatCardNumber(String cardNumber) {
+        return cardNumber.replaceAll("(.{4})", "$1-").substring(0, 19);
+    }
 }

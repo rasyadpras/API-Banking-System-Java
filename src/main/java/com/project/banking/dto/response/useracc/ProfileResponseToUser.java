@@ -1,10 +1,7 @@
 package com.project.banking.dto.response.useracc;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.banking.utils.constant.Gender;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

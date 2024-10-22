@@ -28,9 +28,11 @@ public class SecurityConfiguration {
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-//                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/docs").permitAll()
                         .requestMatchers(APIUrl.AUTHENTICATION_API + "/**").permitAll()
+                        .requestMatchers(APIUrl.PROFILE_API + "/**").permitAll()
+                        .requestMatchers(APIUrl.BANK_ACCOUNT_API + "/**").permitAll()
+                        .requestMatchers(APIUrl.CARD_API + "/**").permitAll()
                         .requestMatchers(APIUrl.TRANSACTION_API + "/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)

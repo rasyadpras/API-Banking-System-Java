@@ -1,6 +1,5 @@
 package com.project.banking.dto.response.auth;
 
-import com.project.banking.entity.Role;
 import lombok.*;
 
 import java.util.List;

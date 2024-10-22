@@ -5,8 +5,6 @@ import com.project.banking.utils.constant.CardPrincipal;
 import com.project.banking.utils.constant.CardStatus;
 import com.project.banking.utils.constant.CardType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;

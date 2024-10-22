@@ -2,7 +2,6 @@ package com.project.banking.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.banking.utils.constant.Gender;
 import com.project.banking.utils.constant.IdentityType;
 import jakarta.persistence.*;

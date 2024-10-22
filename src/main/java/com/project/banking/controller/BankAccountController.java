@@ -50,7 +50,7 @@ public class BankAccountController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'OFFICER')")
     @PatchMapping(
-            path = APIUrl.PATH_CLOSE + APIUrl.PATH_ID,
+            path = APIUrl.PATH_ID + APIUrl.PATH_CLOSE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SuccessResponse<String>> closeAccount(@PathVariable String id) {

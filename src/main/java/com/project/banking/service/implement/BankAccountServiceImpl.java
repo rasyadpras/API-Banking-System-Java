@@ -3,11 +3,13 @@ package com.project.banking.service.implement;
 import com.project.banking.dto.request.CreateBankAccountRequest;
 import com.project.banking.dto.response.bankacc.BankAccountResponse;
 import com.project.banking.entity.BankAccount;
+import com.project.banking.entity.Profile;
 import com.project.banking.mapper.BankAccountMapper;
 import com.project.banking.repository.BankAccountRepository;
 import com.project.banking.service.BankAccountService;
 import com.project.banking.service.BranchService;
 import com.project.banking.service.ProfileService;
+import com.project.banking.service.UserService;
 import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.BankAccountStatus;
@@ -21,7 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -33,6 +34,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     private final BranchService branchService;
     private final ProfileService profileService;
+    private final UserService userService;
     private final ConverterUtil converter;
 
     private final AtomicInteger sequence = new AtomicInteger(1);
@@ -86,7 +88,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     @Override
     public BankAccountResponse getById(String id) {
+        Profile currentUser = userService.getByContext().getProfile();
         BankAccount account = findId(id);
+
+        if (!currentUser.getId().equals(account.getProfile().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this account");
+        }
+
         return mapper.toBankAccountResponse(account);
     }
 

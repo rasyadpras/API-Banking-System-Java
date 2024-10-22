@@ -7,6 +7,7 @@ import com.project.banking.entity.Profile;
 import com.project.banking.mapper.ProfileMapper;
 import com.project.banking.repository.ProfileRepository;
 import com.project.banking.service.ProfileService;
+import com.project.banking.service.UserService;
 import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.Gender;
@@ -27,6 +28,8 @@ public class ProfileServiceImpl implements ProfileService {
     private final ValidationUtil validation;
     private final ConverterUtil converter;
     private final ProfileMapper mapper;
+
+    private final UserService userService;
 
     private Gender inputGender(String gender) {
         return switch (gender.toLowerCase()) {
@@ -63,7 +66,13 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional(readOnly = true)
     @Override
     public ProfileResponse getById(String id) {
+        Profile currentUser = userService.getByContext().getProfile();
         Profile profile = findId(id);
+
+        if (!currentUser.getId().equals(profile.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this profile");
+        }
+
         return mapper.toProfileResponse(profile);
     }
 

@@ -1,7 +1,6 @@
 package com.project.banking.dto.response.card;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.banking.dto.response.bankacc.BranchResponseToBankAccount;
 import com.project.banking.utils.constant.BankAccountStatus;
 import com.project.banking.utils.constant.BankAccountType;
 import lombok.*;

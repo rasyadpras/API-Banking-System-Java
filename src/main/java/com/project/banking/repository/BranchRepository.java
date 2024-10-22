@@ -1,7 +1,6 @@
 package com.project.banking.repository;
 
 import com.project.banking.entity.Branch;
-import com.project.banking.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

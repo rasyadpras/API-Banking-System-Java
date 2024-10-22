@@ -3,10 +3,12 @@ package com.project.banking.service.implement;
 import com.project.banking.dto.request.AddCardRequest;
 import com.project.banking.dto.response.card.CardResponse;
 import com.project.banking.entity.Card;
+import com.project.banking.entity.Profile;
 import com.project.banking.mapper.CardMapper;
 import com.project.banking.repository.CardRepository;
 import com.project.banking.service.BankAccountService;
 import com.project.banking.service.CardService;
+import com.project.banking.service.UserService;
 import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
 import com.project.banking.utils.constant.CardPrincipal;
@@ -33,6 +35,7 @@ public class CardServiceImpl implements CardService {
     private final CardMapper mapper;
 
     private final BankAccountService bankAccountService;
+    private final UserService userService;
     private final ConverterUtil convert;
 
     private CardType inputType(String type) {
@@ -66,7 +69,7 @@ public class CardServiceImpl implements CardService {
         Card card = Card.builder()
                 .bankAccount(bankAccountService.findId(request.getBankAccountId()))
                 .cardType(inputType(request.getCardType()))
-                .cardNumber(request.getCardNumber())
+                .cardNumber(convert.formatCardNumber(request.getCardNumber()))
                 .principal(inputPrincipal(request.getPrincipalCard()))
                 .expiredDate(convert.convertToExpiryDate(request.getExpirationDate()))
                 .cvv(request.getCvv())
@@ -80,7 +83,13 @@ public class CardServiceImpl implements CardService {
     @Transactional(readOnly = true)
     @Override
     public CardResponse getById(String id) {
+        Profile currentUser = userService.getByContext().getProfile();
         Card card = findId(id);
+
+        if (!currentUser.getId().equals(card.getBankAccount().getProfile().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this card");
+        }
+
         return mapper.toCardResponse(card);
     }
 
