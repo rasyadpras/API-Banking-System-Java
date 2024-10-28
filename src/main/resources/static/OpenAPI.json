@@ -774,6 +774,14 @@
                       "message": "Bad Request",
                       "error": "Password must contain one number, one lowercase letter, one uppercase letter, one special character, no space, and it must be at least 8 characters long"
                     }
+                  },
+                  "New Password Same as Old Password": {
+                    "description": "Invalid input password",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Bad Request",
+                      "error": "New password cannot be the same as the current password"
+                    }
                   }
                 }
               }
@@ -903,6 +911,14 @@
                       "statusCode": 400,
                       "message": "Bad Request",
                       "error": "Password must contain one number, one lowercase letter, one uppercase letter, one special character, no space, and it must be at least 8 characters long"
+                    }
+                  },
+                  "New Password Same as Old Password": {
+                    "description": "Invalid input password",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Bad Request",
+                      "error": "New password cannot be the same as the old password"
                     }
                   }
                 }

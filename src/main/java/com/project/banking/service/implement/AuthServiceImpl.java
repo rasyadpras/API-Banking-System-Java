@@ -167,6 +167,10 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access deny");
         }
 
+        if (request.getPassword().equals(user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password cannot be the same as the current password");
+        }
+
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setUpdatedAt(LocalDateTime.now());
         userRepo.save(user);
@@ -192,6 +196,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password not match");
+        }
+
+        if (request.getOldPassword().equals(request.getNewPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password cannot be the same as the old password");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
