@@ -15,4 +15,10 @@ public interface BranchRepository extends JpaRepository<Branch, String> {
             nativeQuery = true
     )
     List<Branch> findAllByRegion(@Param("region") String region);
+
+    @Query(
+            value = "SELECT EXISTS(SELECT 1 FROM bank_branches b WHERE b.branch_code = :branchCode)",
+            nativeQuery = true
+    )
+    boolean existsByBranchCode(@Param("branchCode") String branchCode);
 }
