@@ -65,6 +65,7 @@ public class TransferServiceImpl implements TransferService {
                 .sourceAccount(sourceAcc)
                 .destinationAccount(destinationAcc)
                 .amount(convertedAmount)
+                .transactionDate(LocalDateTime.now())
                 .build();
         transferRepo.saveAndFlush(transfer);
         return mapper.toTransferResponse(transfer);
