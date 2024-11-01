@@ -2,7 +2,7 @@
 
 ### Description
 
-The Banking API is a back-end application developed using Spring Boot
+The Banking API is a back-end application developed using Spring Boot.
 This application offers various features, including user authentication (registration and login)
 opening and closing bank accounts, managing user profiles, administering bank branch data, managing
 bank cards, and facilitating both transfer and cash transactions. The API is designed to provide a
