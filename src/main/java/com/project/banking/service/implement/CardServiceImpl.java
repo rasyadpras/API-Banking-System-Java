@@ -11,6 +11,7 @@ import com.project.banking.service.CardService;
 import com.project.banking.service.UserService;
 import com.project.banking.utils.component.ConverterUtil;
 import com.project.banking.utils.component.ValidationUtil;
+import com.project.banking.utils.constant.BankAccountStatus;
 import com.project.banking.utils.constant.CardPrincipal;
 import com.project.banking.utils.constant.CardStatus;
 import com.project.banking.utils.constant.CardType;
@@ -66,6 +67,11 @@ public class CardServiceImpl implements CardService {
     @Override
     public CardResponse create(AddCardRequest request) {
         validation.validate(request);
+
+        if (bankAccountService.findId(request.getBankAccountId()).getStatus().equals(BankAccountStatus.CLOSED)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This bank account is closed");
+        }
+
         Card card = Card.builder()
                 .bankAccount(bankAccountService.findId(request.getBankAccountId()))
                 .cardType(inputType(request.getCardType()))

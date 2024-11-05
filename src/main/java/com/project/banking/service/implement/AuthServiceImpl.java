@@ -137,13 +137,20 @@ public class AuthServiceImpl implements AuthService {
         );
 
         List<Role> roles = user.getRoles();
+        Roles addRoles;
         switch (request.getRole().toLowerCase()) {
-            case "admin" -> roles.add(roleService.getOrSave(Roles.ROLE_ADMINISTRATOR));
-            case "staff" -> roles.add(roleService.getOrSave(Roles.ROLE_OFFICER));
+            case "admin" -> addRoles = Roles.ROLE_ADMINISTRATOR;
+            case "staff" -> addRoles = Roles.ROLE_OFFICER;
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Value of role must be 'admin' or 'staff'");
         }
-        user.setRoles(roles);
 
+        boolean roleAlreadyExists = roles.stream().anyMatch(role -> role.getRole().equals(addRoles));
+        if (roleAlreadyExists) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already has the role");
+        }
+
+        roles.add(roleService.getOrSave(addRoles));
+        user.setRoles(roles);
         user.setUpdatedAt(LocalDateTime.now());
         userRepo.saveAndFlush(user);
         return userMapper.toUserResponse(user);

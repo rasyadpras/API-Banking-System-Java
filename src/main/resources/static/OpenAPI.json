@@ -681,6 +681,32 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "User already has the role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 409,
+                  "message": "Conflict",
+                  "error": "User already has the role"
+                }
+              }
+            }
           }
         }
       }
