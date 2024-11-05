@@ -56,6 +56,10 @@ public class TransferServiceImpl implements TransferService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance");
         }
 
+        if (request.getSourceAccountNumber().equals(request.getDestinationAccountNumber())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot transfer to the same account");
+        }
+
         sourceAcc.setBalance(sourceAcc.getBalance().subtract(convertedAmount));
         sourceAcc.setUpdatedAt(LocalDateTime.now());
         destinationAcc.setBalance(destinationAcc.getBalance().add(convertedAmount));
