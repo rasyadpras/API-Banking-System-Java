@@ -28,6 +28,11 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchResponse create(CreateBranchRequest request) {
         validation.validate(request);
+
+        if (branchRepo.existsByBranchCode(request.getBranchCode())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Branch code already exists");
+        }
+
         Branch branch = Branch.builder()
                 .branchCode(request.getBranchCode())
                 .branchName(request.getBranchName())
