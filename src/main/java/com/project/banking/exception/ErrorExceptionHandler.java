@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.zip.DataFormatException;
-
 @ControllerAdvice
 public class ErrorExceptionHandler {
     @ExceptionHandler({ResponseStatusException.class})
@@ -33,7 +31,7 @@ public class ErrorExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler({DataFormatException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ErrorExceptionResponse> dataIntegrityViolationError(DataIntegrityViolationException e) {
         ErrorExceptionResponse.ErrorExceptionResponseBuilder builder = ErrorExceptionResponse.builder();
         HttpStatus httpStatus;
@@ -43,7 +41,10 @@ public class ErrorExceptionHandler {
             builder.message(HttpStatus.BAD_REQUEST.getReasonPhrase());
             builder.error("Cannot delete data because other table depend on it");
             httpStatus = HttpStatus.BAD_REQUEST;
-        } else if (e.getMessage().contains("unique constraint") || e.getMessage().contains("Duplicate entry")) {
+        } else if (e.getMessage().contains("unique constraint")
+                || e.getMessage().contains("duplicate entry")
+                || e.getMessage().contains("duplicate key value")
+                || e.getMessage().contains("already exists")) {
             builder.statusCode(HttpStatus.CONFLICT.value());
             builder.message(HttpStatus.CONFLICT.getReasonPhrase());
             builder.error("Data already exists");
