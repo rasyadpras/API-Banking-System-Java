@@ -80,7 +80,13 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ProfileResponse update(UpdateProfileRequest request, String id) {
         validation.validate(request);
+
+        Profile currentUser = userService.getByContext().getProfile();
         Profile profile = findId(id);
+
+        if (!currentUser.getId().equals(profile.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden to access this profile");
+        }
 
         profile.setFullName(request.getFullName());
         profile.setGender(inputGender(request.getGender()));
